@@ -187,3 +187,31 @@ else {
     console.log("Your Browser does not support speech Recognition");
     info.textContent = "Your Browser does not support Speech Recognition";
 }
+let scrolling = false;
+
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this,
+            args = arguments;
+        const later = function () {
+            timeout = null;
+            func.apply(context, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+const debouncedCalcScrollValue = debounce(calcScrollValue, 100);
+
+window.addEventListener('scroll', function () {
+    scrolling = true;
+});
+
+setInterval(function () {
+    if (scrolling) {
+        debouncedCalcScrollValue();
+        scrolling = false;
+    }
+}, 100);
